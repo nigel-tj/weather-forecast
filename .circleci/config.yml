@@ -23,16 +23,16 @@ jobs:
           paths:
             - ~/.npm
 
-      #- run: npm run style
+      - run: npm run style
       #- run: npm run lint
 
       - run: npm run build
-      - run: npm run test
-      #- run: npm run e2e
+      - run: npm run test:coverage -- --watch=false
+      #- run: npm run e2e   //will implement later
 
       - run:
           name: Tar & Gzip compiled app
-          command: tar zcf dist.tar.gz dist/local-weather-app
+          command: tar zcf dist.tar.gz dist/weather-forecast
       - store_artifacts:
           path: dist.tar.gz
 workflows:
