@@ -23,11 +23,11 @@ jobs:
           paths:
             - ~/.npm
 
-      #- run: npm run style //will implement later
-      #- run: npm run lint  //will implement later
+      - run: npm run style
+      #- run: npm run lint
 
       - run: npm run build
-      - run: npm run test
+      - run: npm run test:coverage -- --watch=false
       #- run: npm run e2e   //will implement later
 
       - run:

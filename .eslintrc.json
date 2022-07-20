@@ -16,11 +16,7 @@
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates",
-        "tslint:recommended",
-        "tslint-config-prettier",
-        "tslint-plugin-prettier",
-        "tslint-etc"
+        "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -38,21 +34,6 @@
             "prefix": "app",
             "style": "kebab-case"
           }
-        ],
-        "prettier": true,
-        "no-unused-declaration": true,
-        "quotemark": [
-          true,
-          "single",
-          "avoid-escape"
-        ],
-        "semicolon": [
-          true,
-          "never"
-        ],
-        "max-line-length": [
-          true,
-          90
         ]
       }
     },

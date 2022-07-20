@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   appId: '0508e5a8eb684087473f21093426bfda',
-  baseUrl: 'http://'
+  baseUrl: 'http://',
 };
 
 /*
