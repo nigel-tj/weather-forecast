@@ -28,7 +28,6 @@
     "peacock.affectStatusBar": true,
     "peacock.affectTitleBar": false,
     "workbench.colorCustomizations": {
-        //"activityBar.background": "#d04649",
         "activityBar.activeBorder": "#37cb34",
         "activityBar.foreground": "#e7e7e7",
         "activityBar.inactiveForeground": "#e7e7e799",
@@ -40,7 +39,8 @@
         "activityBar.activeBackground": "#d04649",
         "sash.hoverBorder": "#d04649",
         "statusBarItem.remoteBackground": "#b52e31",
-        "statusBarItem.remoteForeground": "#e7e7e7"
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        //"activityBar.background": "#d04649"
     },
     "peacock.color": "#b52e31",
     "gitlens.menus": {
