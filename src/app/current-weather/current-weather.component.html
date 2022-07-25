@@ -4,7 +4,8 @@
 <div *ngIf="currentWeather">
   <div fxLayout="row">
     <div fxFlex="66%" class="mat-title no-margin"> {{ currentWeather.city }},
-      {{ currentWeather.country }}</div>
+      {{ currentWeather.country }}
+    </div>
     <div fxFlex class="right mat-h3 no-margin">
       {{currentWeather.date | date:'EEEE'}}<br>
       {{currentWeather.date | date:'MMM d'}}{{getOrdinal(currentWeather.date)}}
