@@ -1,10 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { WeatherService } from '../weather/weather.service';
-import { injectSpy } from 'angular-unit-test-helper';
-import { CurrentWeatherComponent } from './current-weather.component';
-import { of } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { injectSpy } from 'angular-unit-test-helper';
+import { of } from 'rxjs';
+
+import { MaterialModule } from '../material.module';
+import { WeatherService } from '../weather/weather.service';
 import { fakeWeather } from '../weather/weather.service.fake';
+import { CurrentWeatherComponent } from './current-weather.component';
 
 describe('CurrentWeatherComponent', () => {
   let component: CurrentWeatherComponent;
@@ -16,7 +18,7 @@ describe('CurrentWeatherComponent', () => {
       'getCurrentWeather',
     ]);
     await TestBed.configureTestingModule({
-      imports: [],
+      imports: [MaterialModule],
       declarations: [CurrentWeatherComponent],
       providers: [
         {
@@ -59,7 +61,7 @@ describe('CurrentWeatherComponent', () => {
     expect(component.currentWeather.temperature).toEqual(280.32);
     // Assert on DOM
     const debugEl = fixture.debugElement;
-    const titleEl: HTMLElement = debugEl.query(By.css('span')).nativeElement;
+    const titleEl: HTMLElement = debugEl.query(By.css('.mat-title')).nativeElement;
     expect(titleEl.textContent).toContain('Bethesda');
   });
 });
