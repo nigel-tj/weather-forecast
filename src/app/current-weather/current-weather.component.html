@@ -1,19 +1,29 @@
-<h1>Current Weather</h1>
 <div *ngIf="!currentWeather">
   <p>No data available</p>
 </div>
-
 <div *ngIf="currentWeather">
-  <div>
-    <span> {{ currentWeather.city }}, {{ currentWeather.country }}</span>
-    <br>
-    <span>{{ currentWeather.date | date: 'fullDate' }}</span>
+  <div fxLayout="row">
+    <div fxFlex="66%" class="mat-title no-margin"> {{ currentWeather.city }},
+      {{ currentWeather.country }}</div>
+    <div fxFlex class="right mat-h3 no-margin">
+      {{currentWeather.date | date:'EEEE'}}<br>
+      {{currentWeather.date | date:'MMM d'}}{{getOrdinal(currentWeather.date)}}
+    </div>
   </div>
-  <div>
-    <img [src]='currentWeather.image'>
-    <span>{{currentWeather.temperature | number:'1.0-0'}}˚F</span>
+  <div fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="55%">
+      <img [src]='currentWeather.image' style="zoom: 175%">
+    </div>
+    <div fxFlex class="right mat-display-3 no-margin">
+      <p>
+        {{currentWeather.temperature | number:'1.0-0'}}
+        <span class="mat-display-1 unit">˚F</span>
+      </p>
+    </div>
   </div>
-  <div>
-    {{currentWeather.description}}
+  <div fxLayoutAlign="center">
+    <div class="mat-caption">
+      {{currentWeather.description}}
+    </div>
   </div>
 </div>
