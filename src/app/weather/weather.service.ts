@@ -1,10 +1,12 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
-import { ICurrentWeather } from '../interfaces';
+import { Injectable } from '@angular/core';
+import { Observable, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
+import { ICurrentWeather } from '../interfaces';
+
+type Coordinates = {latitude: number, longitude: number};
 interface ICurrentWeatherData {
   weather: [
     {
@@ -23,7 +25,8 @@ interface ICurrentWeatherData {
 }
 
 export interface IWeatherService {
-  getCurrentWeather(city: string, country: string): Observable<ICurrentWeather>;
+  getCurrentWeather(city: string | number, country?: string): Observable<ICurrentWeather>;
+  getCurrentWeatherByCoords(coords: Coordinates):Observable<ICurrentWeather>
 }
 
 @Injectable({
@@ -33,19 +36,24 @@ export class WeatherService implements IWeatherService {
   constructor(private httpClient: HttpClient) {}
 
   getCurrentWeather(
-    city: string,
-    country: string
+    search: string | number,
+    country?: string
   ): Observable<ICurrentWeather> {
-    const uriParams = new HttpParams()
-      .set('q', `${city},${country}`)
-      .set('appid', environment.appId);
+    let uriParams = new HttpParams();
+    if (typeof search === 'string') {
+      uriParams = uriParams.set('q', country ? `${search},${country}` : search);
+    } else {
+      uriParams.set('zip', 'search');
+    }
 
-    return this.httpClient
-      .get<ICurrentWeatherData>(
-        `${environment.baseUrl}api.openweathermap.org/data/2.5/weather`,
-        { params: uriParams }
-      )
-      .pipe(map((data) => this.transformToICurrentWeather(data)));
+    return this.getCurrentWeatherHelper(uriParams);
+  }
+
+  getCurrentWeatherByCoords(coords: Coordinates): Observable<ICurrentWeather> {
+    const uriParams = new HttpParams()
+      .set('lat', coords.latitude.toString())
+      .set('lon', coords.longitude.toString());
+    return this.getCurrentWeatherHelper(uriParams);
   }
 
   private transformToICurrentWeather(
@@ -63,5 +71,17 @@ export class WeatherService implements IWeatherService {
 
   private convertKelvinToFahrenheit(kelvin: number): number {
     return (kelvin * 9) / 5 - 459.67;
+  }
+
+  private getCurrentWeatherHelper(
+    uriParams: HttpParams
+  ): Observable<ICurrentWeather> {
+    uriParams.set('appid', environment.appId);
+    return this.httpClient
+      .get<ICurrentWeatherData>(
+        `${environment.baseUrl}api.openweathermap.org/data/2.5/weather`,
+        { params: uriParams }
+      )
+      .pipe(map((data) => this.transformToICurrentWeather(data)));
   }
 }
