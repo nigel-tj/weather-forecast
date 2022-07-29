@@ -1,6 +1,7 @@
 import { Observable, of } from 'rxjs';
-import { IWeatherService } from './weather.service';
+
 import { ICurrentWeather } from '../interfaces';
+import { IWeatherService } from './weather.service';
 
 export const fakeWeather: ICurrentWeather = {
   city: 'Bethesda',
@@ -11,6 +12,9 @@ export const fakeWeather: ICurrentWeather = {
   description: 'light intensity drizzle',
 };
 export class WeatherServiceFake implements IWeatherService {
+  getCurrentWeatherByCoords(coords: { latitude: number; longitude: number; }): Observable<ICurrentWeather> {
+    return of(fakeWeather);;
+  }
   public getCurrentWeather(
     city: string,
     country: string

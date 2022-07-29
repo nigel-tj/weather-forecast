@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+import { ICurrentWeather } from './interfaces';
+import { WeatherService } from './weather/weather.service';
+
 @Component({
   selector: 'app-root',
   template: `
@@ -35,4 +38,16 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'weather-forecast';
+
+  currentWeather: ICurrentWeather | undefined
+  constructor(private weatherService: WeatherService) { }
+
+  doSearch(searchValue: string) {
+    const userInput = searchValue.split(',').map((s: string) => s.trim())
+    this.weatherService
+    .getCurrentWeather(userInput[0], userInput.length > 1 ?
+    userInput[1] : undefined
+    )
+    .subscribe(data => this.currentWeather = data)
+    }
 }
