@@ -73,10 +73,9 @@ export class WeatherService implements IWeatherService {
     return (kelvin * 9) / 5 - 459.67;
   }
 
-  private getCurrentWeatherHelper(
-    uriParams: HttpParams
-  ): Observable<ICurrentWeather> {
-    uriParams.set('appid', environment.appId);
+  private getCurrentWeatherHelper(uriParams: HttpParams): Observable<ICurrentWeather> {
+    uriParams = uriParams.set('appid', environment.appId)
+
     return this.httpClient
       .get<ICurrentWeatherData>(
         `${environment.baseUrl}api.openweathermap.org/data/2.5/weather`,

@@ -16,7 +16,7 @@ import { WeatherService } from './weather/weather.service';
         </div>
       </div>
       <div fxLayoutAlign="center">
-        <app-city-search></app-city-search>
+        <app-city-search (searchEvent)="doSearch($event)"></app-city-search>
       </div>
       <div fxLayout="row">
         <div fxFlex></div>
@@ -27,7 +27,7 @@ import { WeatherService } from './weather/weather.service';
             </mat-card-title>
           </mat-card-header>
           <mat-card-content>
-            <app-current-weather></app-current-weather>
+            <app-current-weather [currentWeather]="currentWeather"></app-current-weather>
           </mat-card-content>
         </mat-card>
         <div fxFlex></div>
@@ -39,7 +39,7 @@ import { WeatherService } from './weather/weather.service';
 export class AppComponent {
   title = 'weather-forecast';
 
-  currentWeather: ICurrentWeather | undefined
+  currentWeather!: ICurrentWeather
   constructor(private weatherService: WeatherService) { }
 
   doSearch(searchValue: string) {
