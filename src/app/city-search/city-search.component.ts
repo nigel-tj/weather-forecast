@@ -1,33 +1,29 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { debounceTime } from 'rxjs/operators'
+import { debounceTime, filter, tap } from 'rxjs/operators';
 
-import { WeatherService } from "./../weather/weather.service";
+import { WeatherService } from './../weather/weather.service';
 
 @Component({
   selector: 'app-city-search',
   templateUrl: './city-search.component.html',
-  styleUrls: ['./city-search.component.css']
+  styleUrls: ['./city-search.component.css'],
 })
-export class CitySearchComponent implements OnInit {
-  @Output() searchEvent = new EventEmitter<string>()
-  search = new FormControl('', [Validators.minLength(2)])
+export class CitySearchComponent{
+  search = new FormControl('', [Validators.required, Validators.minLength(2)]);
 
-  constructor(private weatherService: WeatherService) { }
-
-  ngOnInit(): void {
-    this.search.valueChanges.pipe(debounceTime(1000)).subscribe(
-      (searchValue) => {
-        if(!this.search.invalid && searchValue){
-          const userInput = searchValue.split(',').map(s => s.trim())
-          this.weatherService.getCurrentWeather(
-            userInput[0],
-            userInput.length > 1? userInput[1] : undefined
-          ).subscribe(data => (console.log(data)))
-          this.searchEvent.emit(searchValue)
-        }
-      }
-    )
+  constructor(private weatherService: WeatherService) {
+    this.search.valueChanges.pipe(
+      debounceTime(1000),
+      filter(() => !this.search.invalid),
+      tap((searchValues) => this.doSearch(searchValues!))
+     ).subscribe()
   }
 
+  doSearch(searchValue: string) {
+    const userInput = searchValue.split(',').map((s) => s.trim());
+    const searchText = userInput[0];
+    const country = userInput.length > 1 ? userInput[1] : undefined;
+    this.weatherService.updateCurrentWeather(searchText, country);
+  }
 }

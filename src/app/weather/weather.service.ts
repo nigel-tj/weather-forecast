@@ -1,12 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, zip } from 'rxjs';
+import { BehaviorSubject, Observable, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../environments/environment';
 import { ICurrentWeather } from '../interfaces';
 
-type Coordinates = {latitude: number, longitude: number};
+type Coordinates = { latitude: number; longitude: number };
 interface ICurrentWeatherData {
   weather: [
     {
@@ -25,8 +25,15 @@ interface ICurrentWeatherData {
 }
 
 export interface IWeatherService {
-  getCurrentWeather(city: string | number, country?: string): Observable<ICurrentWeather>;
-  getCurrentWeatherByCoords(coords: Coordinates):Observable<ICurrentWeather>
+  readonly currentWeather$: BehaviorSubject<ICurrentWeather>;
+  getCurrentWeather(
+    city: string | number,
+    country?: string
+  ): Observable<ICurrentWeather>;
+  getCurrentWeatherByCoords(coords: Coordinates): Observable<ICurrentWeather>;
+  updateCurrentWeather(
+    search: string | number,
+    country?: string): void
 }
 
 @Injectable({
@@ -34,6 +41,15 @@ export interface IWeatherService {
 })
 export class WeatherService implements IWeatherService {
   constructor(private httpClient: HttpClient) {}
+
+  readonly currentWeather$ = new BehaviorSubject<ICurrentWeather>({
+    city: '--',
+    country: '--',
+    date: Date.now(),
+    image: '',
+    temperature: 0,
+    description: '',
+  });
 
   getCurrentWeather(
     search: string | number,
@@ -56,6 +72,12 @@ export class WeatherService implements IWeatherService {
     return this.getCurrentWeatherHelper(uriParams);
   }
 
+  updateCurrentWeather(search: string | number,country?: string): void {
+    this.getCurrentWeather(search, country)
+    .subscribe(weather => this.currentWeather$.next(weather)
+    )
+    }
+
   private transformToICurrentWeather(
     data: ICurrentWeatherData
   ): ICurrentWeather {
@@ -73,8 +95,10 @@ export class WeatherService implements IWeatherService {
     return (kelvin * 9) / 5 - 459.67;
   }
 
-  private getCurrentWeatherHelper(uriParams: HttpParams): Observable<ICurrentWeather> {
-    uriParams = uriParams.set('appid', environment.appId)
+  private getCurrentWeatherHelper(
+    uriParams: HttpParams
+  ): Observable<ICurrentWeather> {
+    uriParams = uriParams.set('appid', environment.appId);
 
     return this.httpClient
       .get<ICurrentWeatherData>(

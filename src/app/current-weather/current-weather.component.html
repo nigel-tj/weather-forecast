@@ -1,7 +1,4 @@
-<div *ngIf="!currentWeather">
-  <p>No data available</p>
-</div>
-<div *ngIf="currentWeather">
+<div *ngIf="currentWeather$ | async as currentWeather">
   <div fxLayout="row">
     <div fxFlex="66%" class="mat-title no-margin"> {{ currentWeather.city }},
       {{ currentWeather.country }}
